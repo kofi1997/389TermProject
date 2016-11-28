@@ -1,0 +1,61 @@
+import java.util.LinkedList;
+import java.util.Scanner;
+import java.util.Collections;
+
+public class Sort {
+
+	public static void main(String[] args) {
+		//Initial stuff
+		Scanner scan = new Scanner(System.in);
+		Scanner reader = new Scanner(System.in);
+		LinkedList<Words> dictionary = new LinkedList<Words>();
+		String word, def;
+		String response = "";
+		String response2 = "";
+		int ans = -1;
+		
+		//menu for personal dictionary
+		while (!response2.equals("Yes")){
+			System.out.println("Welcome to the personal dictionary. \n1 to add a word\n2 to remove a word");
+			ans = reader.nextInt();
+			switch(ans) {
+				case 1: {
+					//for adding a word to the dictionary
+					while (!response.equals("Yes")) {
+						System.out.println("What is the word you are adding?");
+						word = scan.nextLine();
+						System.out.println("What is its definition?");
+						def = scan.nextLine();
+						Words entry = new Words(word,def);
+						dictionary.add(entry);
+						System.out.println("Are you done adding your word?");
+						response = scan.nextLine();
+					}
+					break;
+				}
+				case 2: {
+					//for removing a word from the dictionary
+					System.out.println("What are you removing?");
+					String remove_w = scan.nextLine();
+					for (int x = 0; x < dictionary.size(); x++) {
+						if ((dictionary.get(x).word).equals(remove_w)){
+							dictionary.remove(dictionary.get(x));
+							break;
+						}
+					}
+					break;
+				}
+			}
+			System.out.println("Are you done?");
+			response2 = scan.nextLine();
+		}
+
+		Collections.sort(dictionary); //sort the dictionary
+		
+		//print out the dictionary
+		for (int x = 0; x <dictionary.size(); x++) {
+			dictionary.get(x).print_all();
+		}
+		scan.close();
+	}
+}
