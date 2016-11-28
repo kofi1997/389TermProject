@@ -1,0 +1,26 @@
+
+public class Words implements Comparable<Words> {
+	//the word and its definition
+	String word;
+	String def;
+	
+	public Words(String new_word, String new_def) { //constructor
+		word = new_word;
+		def = new_def;
+	}
+	public void print_all() {//print out the word and then the definition
+		System.out.println("Word: " + word);
+		System.out.println("\tDefinition: " + def);
+	}
+	
+	public int compareTo(Words w) { //overload compareTo()
+		String comparedSize = w.word;
+		if ((this.word).compareTo(comparedSize) > comparedSize.compareTo(this.word)) {
+			return 1;
+		} else if (this.word.compareTo(comparedSize) == comparedSize.compareTo(this.word)) {
+			return 0;
+		} else {
+			return -1;
+		}
+	}
+}
