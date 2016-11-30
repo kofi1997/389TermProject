@@ -1,0 +1,55 @@
+import java.io.*;
+import java.net.*;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.logging.*;
+import java.util.LinkedList;
+import java.lang.Thread;
+
+public class MultiThreading implements Runnable {
+
+	Thread t;
+	LinkedList<Words> dict_temp = new LinkedList<Words>();
+	String temp_def;
+	String temp_word;
+	int action;
+	
+	
+	MultiThreading (LinkedList<Words> dict, String word, String def, int ans) {
+		dict_temp = dict;
+		temp_def = def;
+		temp_word = word;
+		action = ans;
+	}
+	MultiThreading (LinkedList<Words> dict, String word, int ans) {
+		dict_temp = dict;
+		temp_word = word;
+		action = ans;
+	}
+	@Override
+	public void run() {
+		System.out.println("Thread: Server is working");
+		try {
+			Thread.sleep(3000);
+			
+			if (action == 1) {
+				Words entry = new Words(temp_word,temp_def);
+				dict_temp.add(entry);
+			}
+			else if (action == 2) {
+				for (int x = 0; x < dict_temp.size(); x++) {
+					if ((dict_temp.get(x).word).equals(temp_word)){
+						dict_temp.remove(dict_temp.get(x));
+						break;
+					}
+				}
+			}
+			
+		} catch (InterruptedException e) {
+			System.out.println("Thread: Server was interrupted");
+		}
+		System.out.println("Word is added");
+		return;
+	}
+}
+
