@@ -1,0 +1,62 @@
+import java.util.LinkedList;
+import java.util.Scanner;
+import java.util.Collections;
+import java.util.*;
+import java.lang.Thread;
+
+public class MultiThreadingMain {
+
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		Scanner reader = new Scanner(System.in);
+		LinkedList<Words> dictionary = new LinkedList<Words>();
+		String word, def;
+		String response = "";
+		String response2 = "";
+		int ans = -1;
+		
+		
+		while (!response2.equals("Yes")){
+			System.out.println("Welcome to the personal dictionary. \n1 to add a word\n2 to remove a word");
+			ans = reader.nextInt();
+			switch(ans) {
+				case 1: {
+					//for adding a word to the dictionary
+					while (!response.equals("Yes")) {
+						System.out.println("Main: What is the word you are adding?");
+						word = scan.nextLine();
+						System.out.println("Main: What is its definition?");
+						def = scan.nextLine();
+						new Thread(new MultiThreading(dictionary,word,def,ans));
+						System.out.println("Main: Are you done adding your word?");
+						response = scan.nextLine();
+					}
+					break;
+				}
+				case 2: {
+					//for removing a word from the dictionary
+					System.out.println("What are you removing?");
+					String remove_w = scan.nextLine();
+					new Thread(new MultiThreading(dictionary,remove_w,ans));
+					break;
+				}
+			}
+			System.out.println("Are you done?");
+			response2 = scan.nextLine();
+		}
+		try {
+			System.out.println("Time to catch up!");
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			System.out.println("Server was interrupted");
+		}
+		
+		Collections.sort(dictionary); //sort the dictionary
+			
+		//print out the dictionary
+		for (int x = 0; x <dictionary.size(); x++) {
+			dictionary.get(x).print_all();
+		}
+		scan.close();
+	}
+}
