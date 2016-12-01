@@ -1,19 +1,34 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package cse389_termserver;
+
+/**
+ *
+ * @author Emily
+ */
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.concurrent.*;
 import java.util.logging.*;
+import java.util.Scanner;
 
-public class JHTTP {
+public class CSE389_termServer {
 
-  private static final Logger logger = Logger.getLogger(
-      JHTTP.class.getCanonicalName());
+   private static final Logger logger = Logger.getLogger(
+   CSE389_termServer.class.getCanonicalName());
   private static final int NUM_THREADS = 50;
   private static final String INDEX_FILE = "index.html";
 
   private final File rootDirectory;
   private final int port;
     
-  public JHTTP(File rootDirectory, int port) throws IOException {
+  public CSE389_termServer(File rootDirectory, int port) throws IOException {
     
     if (!rootDirectory.isDirectory()) {
       throw new IOException(rootDirectory 
@@ -22,8 +37,53 @@ public class JHTTP {
     this.rootDirectory = rootDirectory;
     this.port = port;
   }
+  
+  public void authenticate() throws IOException {
+      String userName=""; String password=""; String p=""; String u="";
+      boolean linNum=true;
+      boolean condition=false;
+      File wordsfile=new File("Authentication.txt");
+      Scanner file=new Scanner(wordsfile);
+      Scanner input=new Scanner(System.in);
+      
+      ArrayList<Authentication> users=new ArrayList();
+      Authentication admin= new Authentication();
+      users.add(admin);
+      
+    while(!condition){
+        System.out.print("Enter your User Name: ");
+        userName=input.nextLine();
+        System.out.print("\nEnter your Password: ");
+        password=input.nextLine();        
 
-  public void start() throws IOException {
+        while (file.hasNextLine()){
+            String line=file.nextLine();
+            if(linNum){
+                u=line;
+                linNum=false;
+            }
+            else{
+                p=line;
+                Authentication user=new Authentication(u,p);
+                users.add(user);
+                linNum=true;
+            } 
+        }
+        for(int x=0;x<users.size();x++){
+            if (userName.equals(users.get(x).user)){
+                
+                if(password.equals(users.get(x).password)){ condition=true; break;}
+                else {System.out.println("That was an incorrect Password."); break;}
+            }
+            if(x==users.size()-1 && !userName.equals(users.get(x).user)){
+                System.out.println("That was an incorrect Username.");
+                break;
+            }
+        }
+    }
+  }
+
+  public void start() throws IOException {      
     ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
     try (ServerSocket server = new ServerSocket(port)) {
       logger.info("Accepting connections on port " + server.getLocalPort());
@@ -41,11 +101,12 @@ public class JHTTP {
       }
     }
   }
-  
-  public static void main(String[] args) {
-
-    // get the Document root
-    File docroot;
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+         File docroot;
     try {
       docroot = new File(args[0]);
     } catch (ArrayIndexOutOfBoundsException ex) {
@@ -63,10 +124,12 @@ public class JHTTP {
     }  
     
     try {            
-      JHTTP webserver = new JHTTP(docroot, port);
+      CSE389_termServer webserver = new CSE389_termServer(docroot, port);
+      webserver.authenticate();
       webserver.start();
     } catch (IOException ex) {
       logger.log(Level.SEVERE, "Server could not start", ex);
     }
-  }
+    }
+    
 }
