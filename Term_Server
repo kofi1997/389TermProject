@@ -38,49 +38,77 @@ public class CSE389_termServer {
     this.port = port;
   }
   
-  public void authenticate() throws IOException {
+  public void userAuthentication(File wordsfile, ArrayList<Authentication> users) throws FileNotFoundException{
+      Scanner file=new Scanner(wordsfile);
+      Scanner input=new Scanner(System.in);
       String userName=""; String password=""; String p=""; String u="";
       boolean linNum=true;
       boolean condition=false;
+              while(!condition){
+            System.out.print("Enter your User Name: ");
+            userName=input.nextLine();
+            System.out.print("\nEnter your Password: ");
+            password=input.nextLine();        
+
+            while (file.hasNextLine()){
+                String line=file.nextLine();
+                if(linNum){
+                    u=line;
+                    linNum=false;
+                }
+                else{
+                    p=line;
+                    Authentication user=new Authentication(u,p);
+                    users.add(user);
+                    linNum=true;
+                } 
+            }
+            for(int x=0;x<users.size();x++){
+                if (userName.equals(users.get(x).user)){
+
+                    if(password.equals(users.get(x).password)){ condition=true; break;}
+                    else {System.out.println("That was an incorrect Password."); break;}
+                }
+                if(x==users.size()-1 && !userName.equals(users.get(x).user)){
+                    System.out.println("That was an incorrect Username.");
+                    break;
+                }
+            }
+        }
+  }
+  
+  public void authenticate() throws IOException {
+      String userName=""; String password="";
       File wordsfile=new File("Authentication.txt");
+      if(!wordsfile.exists()) wordsfile.createNewFile();
+              
       Scanner file=new Scanner(wordsfile);
       Scanner input=new Scanner(System.in);
       
       ArrayList<Authentication> users=new ArrayList();
       Authentication admin= new Authentication();
       users.add(admin);
-      
-    while(!condition){
-        System.out.print("Enter your User Name: ");
-        userName=input.nextLine();
-        System.out.print("\nEnter your Password: ");
-        password=input.nextLine();        
-
-        while (file.hasNextLine()){
-            String line=file.nextLine();
-            if(linNum){
-                u=line;
-                linNum=false;
-            }
-            else{
-                p=line;
-                Authentication user=new Authentication(u,p);
-                users.add(user);
-                linNum=true;
-            } 
-        }
-        for(int x=0;x<users.size();x++){
-            if (userName.equals(users.get(x).user)){
-                
-                if(password.equals(users.get(x).password)){ condition=true; break;}
-                else {System.out.println("That was an incorrect Password."); break;}
-            }
-            if(x==users.size()-1 && !userName.equals(users.get(x).user)){
-                System.out.println("That was an incorrect Username.");
-                break;
-            }
-        }
-    }
+      System.out.print("Do you have a username? (enter 1 or 2) \n1. yes\n2. no\n");
+      int ans=input.nextInt();
+      if(ans==1){
+          userAuthentication(wordsfile, users);
+      }
+      else if (ans==2){
+          FileWriter fw=new FileWriter(wordsfile, true);
+          BufferedWriter bw=new BufferedWriter(fw);
+          System.out.println("Create your User Name: ");
+            String spaceCatch=input.nextLine();
+            userName=input.nextLine();
+            System.out.println("\nCreate your Password: ");
+            password=input.nextLine();
+            if(file.hasNextLine())bw.newLine();
+            bw.write(userName);
+            bw.newLine();
+            bw.write(password);
+            bw.close();
+            userAuthentication(wordsfile, users);
+      }
+      else return;
   }
 
   public void start() throws IOException {      
