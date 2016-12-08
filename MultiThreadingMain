@@ -8,17 +8,27 @@ public class MultiThreadingMain {
 
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
-		Scanner reader = new Scanner(System.in);
+		
 		LinkedList<Words> dictionary = new LinkedList<Words>();
 		String word, def;
-		String response = "";
 		String response2 = "";
-		int ans = -1;
+		
 		
 		
 		while (!response2.equals("Yes")){
-			System.out.println("Welcome to the personal dictionary. \n1 to add a word\n2 to remove a word");
-			ans = reader.nextInt();
+			int ans = -1;
+			while (ans != 1 && ans != 2) {
+				Scanner reader = new Scanner(System.in);
+				System.out.println("Welcome to the personal dictionary. \n1 to add a word\n2 to remove a word");
+				try {
+					ans = reader.nextInt();
+				} catch (java.util.InputMismatchException e) {
+					System.out.println("Please enter 1 or 2");
+				}
+			}
+			
+			String response = "";
+			
 			switch(ans) {
 				case 1: {
 					//for adding a word to the dictionary
@@ -36,21 +46,23 @@ public class MultiThreadingMain {
 				}
 				case 2: {
 					//for removing a word from the dictionary
-					System.out.println("What are you removing?");
-					String remove_w = scan.nextLine();
-					Thread t2 = new Thread(new MultiThreading(dictionary,remove_w,ans));
-					t2.start();
+					while (!response.equals("Yes")) {
+						System.out.println("What are you removing?");
+						String remove_w = scan.nextLine();
+						Thread t2 = new Thread(new MultiThreading(dictionary,remove_w,ans));
+						t2.start();
+						System.out.println("Main: Are you done removing your words?");
+						response = scan.nextLine();
+					}
 					break;
 				}
 			}
-			System.out.println("Are you done?");
-			response2 = scan.nextLine();
 			
 			try {
 				System.out.println("Time to catch up!");
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
-				System.out.println("Server was interrupted");
+				System.err.println("Server was interrupted");
 			}
 			
 			Collections.sort(dictionary); //sort the dictionary
@@ -59,7 +71,11 @@ public class MultiThreadingMain {
 			for (int x = 0; x <dictionary.size(); x++) {
 				dictionary.get(x).print_all();
 			}
-			scan.close();
+			
+			System.out.println("Are you done?");
+			response2 = scan.nextLine();
 		}
+		scan.close();
 	}
 }
+
