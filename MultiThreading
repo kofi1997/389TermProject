@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
@@ -8,7 +9,6 @@ import java.lang.Thread;
 
 public class MultiThreading implements Runnable {
 
-	Thread t;
 	LinkedList<Words> dict_temp = new LinkedList<Words>();
 	String temp_def;
 	String temp_word;
@@ -35,21 +35,23 @@ public class MultiThreading implements Runnable {
 			if (action == 1) {
 				Words entry = new Words(temp_word,temp_def);
 				dict_temp.add(entry);
+				System.out.println("Word is added");
 			}
 			else if (action == 2) {
-				for (int x = 0; x < dict_temp.size(); x++) {
+				int x;
+				for (x = 0; x < dict_temp.size(); x++) {
 					if ((dict_temp.get(x).word).equals(temp_word)){
 						dict_temp.remove(dict_temp.get(x));
-						break;
+						System.out.println(temp_word + " has been removed");
+						return;
 					}
 				}
+				if (x == dict_temp.size()) System.out.println(temp_word + " does not exist in dictionary.");
+				if (dict_temp.size() == 0) System.out.println("Dictionary is empty.");
 			}
 			
 		} catch (InterruptedException e) {
-			System.out.println("Thread: Server was interrupted");
+			System.err.println("Thread: Server was interrupted");
 		}
-		System.out.println("Word is added");
-		return;
 	}
 }
-
