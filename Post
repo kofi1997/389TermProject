@@ -1,0 +1,66 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Tiago Da Costa
+ */
+import java.io.*;
+import java.net.*;
+import java.util.concurrent.*;
+import java.util.logging.*;
+import java.util.Map;
+import java.util.List;
+public class Post 
+{
+    private static final Logger logger = Logger.getLogger(Head.class.getCanonicalName());
+    private static final int num_threads = 50;
+    private static final String url_add = "http://localhost:090";
+    private static final String user_agent = "Mozilla/5.0";
+    
+    public static void getPost(String USER) throws IOException
+    {
+        int r_code;
+        
+        URL add =  new URL(url_add);
+        HttpURLConnection conn = (HttpURLConnection) add.openConnection();
+        
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("USER-AGENT", user_agent);
+        //conn.setRequestProperty("Accept-Language", "en-US,en; q=0.5");
+        
+        conn.setDoOutput(true);
+        OutputStream output = conn.getOutputStream();
+        output.write(USER.getBytes());
+        output.flush();
+        output.close();
+        
+        r_code = conn.getResponseCode();
+        System.out.println("POST Response Code: " + r_code);
+        
+        if(r_code == HttpURLConnection.HTTP_OK)
+        {
+            BufferedReader Buff_in = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()));
+            String input;
+            StringBuffer sBuff = new StringBuffer();
+            
+            while((input = Buff_in.readLine()) != null)
+            {
+                sBuff.append(input);
+            }
+            Buff_in.close();
+            
+            System.out.println(sBuff.toString());
+        }
+        else
+        {
+            System.out.println("POST request has failed.");
+        }
+        
+    }
+    
+}
