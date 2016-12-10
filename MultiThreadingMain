@@ -3,6 +3,8 @@ import java.util.Scanner;
 import java.util.Collections;
 import java.util.*;
 import java.lang.Thread;
+import java.io.PrintWriter;
+import java.io.File;
 
 public class MultiThreadingMain {
 
@@ -17,13 +19,13 @@ public class MultiThreadingMain {
 		
 		while (!response2.equals("Yes")){
 			int ans = -1;
-			while (ans != 1 && ans != 2) {
+			while (ans != 1 && ans != 2 && ans != 3) {
 				Scanner reader = new Scanner(System.in);
-				System.out.println("Welcome to the personal dictionary. \n1 to add a word\n2 to remove a word");
+				System.out.println("Welcome to the personal dictionary. \n1 to add a word\n2 to remove a word\n3 to see the list");
 				try {
 					ans = reader.nextInt();
 				} catch (java.util.InputMismatchException e) {
-					System.out.println("Please enter 1 or 2");
+					System.out.println("Please enter 1, 2, or 3");
 				}
 			}
 			
@@ -39,7 +41,7 @@ public class MultiThreadingMain {
 						def = scan.nextLine();
 						Thread t1 = new Thread(new MultiThreading(dictionary,word,def,ans));
 						t1.start();
-						System.out.println("Main: Are you done adding your word?");
+						System.out.println("Main: Are you done adding your word (Yes or No)?");
 						response = scan.nextLine();
 					}
 					break;
@@ -51,7 +53,7 @@ public class MultiThreadingMain {
 						String remove_w = scan.nextLine();
 						Thread t2 = new Thread(new MultiThreading(dictionary,remove_w,ans));
 						t2.start();
-						System.out.println("Main: Are you done removing your words?");
+						System.out.println("Main: Are you done removing your words (Yes or No)?");
 						response = scan.nextLine();
 					}
 					break;
@@ -68,11 +70,25 @@ public class MultiThreadingMain {
 			Collections.sort(dictionary); //sort the dictionary
 			
 			//print out the dictionary
-			for (int x = 0; x <dictionary.size(); x++) {
-				dictionary.get(x).print_all();
+			//for (int x = 0; x <dictionary.size(); x++) {
+			//	dictionary.get(x).print_all();
+			//}
+			
+			try {
+				//File file = new File("test.txt");
+				PrintWriter writer = new PrintWriter("testfile.txt");
+				for (int x = 0; x < dictionary.size(); x++) {
+					writer.println("Word: " + dictionary.get(x).word);
+					writer.println("\tDefinition: " + dictionary.get(x).def);
+				}
+				writer.close();
+			}
+			catch (Exception e){
+				System.err.println("Word was not printed");
 			}
 			
-			System.out.println("Are you done?");
+			
+			System.out.println("Are you done (Yes or No)?");
 			response2 = scan.nextLine();
 		}
 		scan.close();
