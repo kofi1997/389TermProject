@@ -1,0 +1,96 @@
+import java.util.LinkedList;
+import java.util.Scanner;
+import java.util.Collections;
+import java.util.*;
+import java.lang.Thread;
+import java.io.PrintWriter;
+import java.io.File;
+
+public class MultiThreadingMain {
+
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		
+		LinkedList<Words> dictionary = new LinkedList<Words>();
+		String word, def;
+		String response2 = "";
+		
+		
+		
+		while (!response2.equals("Yes")){
+			int ans = -1;
+			while (ans != 1 && ans != 2 && ans != 3) {
+				Scanner reader = new Scanner(System.in);
+				System.out.println("Welcome to the personal dictionary. \n1 to add a word\n2 to remove a word\n3 to go straight to the list");
+				try {
+					ans = reader.nextInt();
+				} catch (java.util.InputMismatchException e) {
+					System.out.println("Please enter 1, 2, or 3");
+				}
+			}
+			
+			String response = "";
+			
+			switch(ans) {
+				case 1: {
+					//for adding a word to the dictionary
+					while (!response.equals("Yes")) {
+						System.out.println("Main: What is the word you are adding?");
+						word = scan.nextLine();
+						System.out.println("Main: What is its definition?");
+						def = scan.nextLine();
+						Thread t1 = new Thread(new MultiThreading(dictionary,word,def,ans));
+						t1.start();
+						System.out.println("Main: Are you done adding your word (Yes or No)?");
+						response = scan.nextLine();
+					}
+					break;
+				}
+				case 2: {
+					//for removing a word from the dictionary
+					while (!response.equals("Yes")) {
+						System.out.println("What are you removing?");
+						String remove_w = scan.nextLine();
+						Thread t2 = new Thread(new MultiThreading(dictionary,remove_w,ans));
+						t2.start();
+						System.out.println("Main: Are you done removing your words (Yes or No)?");
+						response = scan.nextLine();
+					}
+					break;
+				}
+			}
+			
+			try {
+				System.out.println("Time to catch up!");
+				Thread.sleep(4000);
+			} catch (InterruptedException e) {
+				System.err.println("Server was interrupted");
+			}
+			
+			Collections.sort(dictionary); //sort the dictionary
+			
+			//print out the dictionary
+			//for (int x = 0; x <dictionary.size(); x++) {
+			//	dictionary.get(x).print_all();
+			//}
+			
+			try {
+				File file = new File("D:/cse389TermServer_webpages/test.html");
+				PrintWriter writer = new PrintWriter(file);
+				for (int x = 0; x < dictionary.size(); x++) {
+					writer.println("<h1>Word: " + dictionary.get(x).word+"</h1>");
+					writer.println("\t<p>Definition: " + dictionary.get(x).def+"</p>");
+				}
+				writer.close();
+			}
+			catch (Exception e){
+				System.err.println("Word was not printed");
+			}
+			
+			
+			System.out.println("Are you done with the program (Yes or No)?");
+			response2 = scan.nextLine();
+		}
+		scan.close();
+	}
+}
