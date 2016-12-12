@@ -13,3 +13,7 @@ In order to test the functionality of the cache connect to the running server by
 
 # Multithreading
 Multithreading is implemented in this Java server through the add and remove methods for words in the dictionary. These methods operate using switches and while loops, while sorting methods utilize Collections. The functionality of this code can be tested be scanning the results of the operation in browser. The results of updates made to the word dictionary are printed to the browser. The user’s inputs are visible there. 
+
+# HTTP Methods
+The HTTP methods are implemented through the “Head” and “Post” classes. They can be used to retrieve the headers of a HTTP request, or send a new HTTP Post. Or through post to retrieve the body of the request. The “getHead” methods retrieves all the headers from a HTTP request and stores them in a map. And the “sendPost” method similarly sends a HTTP post method by connecting to a URL and sending a USER’s message. However, since the operations are all server sided the HTTP methods were not required to achieve functionality.
+
