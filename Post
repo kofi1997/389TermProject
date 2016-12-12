@@ -21,7 +21,7 @@ public class Post
     private static final String url_add = "http://localhost:090";
     private static final String user_agent = "Mozilla/5.0";
     
-    public static void getPost(String USER) throws IOException
+    public static void sendPost(String USER) throws IOException
     {
         int r_code;
         
