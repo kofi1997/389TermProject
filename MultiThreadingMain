@@ -75,7 +75,7 @@ public class MultiThreadingMain {
 			//}
 			
 			try {
-				File file = new File("D:/cse389TermServer_webpages/test.html");
+				File file = new File(args[0]); //same file directory as other dummy files 
 				PrintWriter writer = new PrintWriter(file);
 				for (int x = 0; x < dictionary.size(); x++) {
 					writer.println("<h1>Word: " + dictionary.get(x).word+"</h1>");
