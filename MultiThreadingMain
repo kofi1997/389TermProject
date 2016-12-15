@@ -11,18 +11,19 @@ public class MultiThreadingMain {
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
 		
+		//Creation of variables
 		LinkedList<Words> dictionary = new LinkedList<Words>();
 		String word, def;
 		String response2 = "";
 		
 		
 		
-		while (!response2.equals("Yes")){
+		while (!response2.equals("Yes")){ //first while loop to detect what user wants to do
 			int ans = -1;
-			while (ans != 1 && ans != 2 && ans != 3) {
+			while (ans != 1 && ans != 2 && ans != 3) { //for the switch
 				Scanner reader = new Scanner(System.in);
 				System.out.println("Welcome to the personal dictionary. \n1 to add a word\n2 to remove a word\n3 to go straight to the list");
-				try {
+				try { //gets user's input while making sure input is correct
 					ans = reader.nextInt();
 				} catch (java.util.InputMismatchException e) {
 					System.out.println("Please enter 1, 2, or 3");
@@ -33,7 +34,7 @@ public class MultiThreadingMain {
 			
 			switch(ans) {
 				case 1: {
-					//for adding a word to the dictionary
+					//for adding a word to the dictionary through threading
 					while (!response.equals("Yes")) {
 						System.out.println("Main: What is the word you are adding?");
 						word = scan.nextLine();
@@ -47,7 +48,7 @@ public class MultiThreadingMain {
 					break;
 				}
 				case 2: {
-					//for removing a word from the dictionary
+					//for removing a word from the dictionary through threading
 					while (!response.equals("Yes")) {
 						System.out.println("What are you removing?");
 						String remove_w = scan.nextLine();
@@ -60,7 +61,7 @@ public class MultiThreadingMain {
 				}
 			}
 			
-			try {
+			try { //to make sure all words are removed or added, makes the computer wait 4 seconds
 				System.out.println("Time to catch up!");
 				Thread.sleep(4000);
 			} catch (InterruptedException e) {
@@ -69,26 +70,26 @@ public class MultiThreadingMain {
 			
 			Collections.sort(dictionary); //sort the dictionary
 			
-			//print out the dictionary
+			//print out the dictionary to console
 			//for (int x = 0; x <dictionary.size(); x++) {
 			//	dictionary.get(x).print_all();
 			//}
 			
-			try {
+			try { //creation of new file using the argument
 				File file = new File(args[0]); //same file directory as other dummy files 
 				PrintWriter writer = new PrintWriter(file);
-				for (int x = 0; x < dictionary.size(); x++) {
+				for (int x = 0; x < dictionary.size(); x++) { //html format
 					writer.println("<h1>Word: " + dictionary.get(x).word+"</h1>");
 					writer.println("\t<p>Definition: " + dictionary.get(x).def+"</p>");
 				}
 				writer.close();
 			}
-			catch (Exception e){
+			catch (Exception e){ //catches any error 
 				System.err.println("Word was not printed");
 			}
 			
 			
-			System.out.println("Are you done with the program (Yes or No)?");
+			System.out.println("Are you done with the program (Yes or No)?"); //asks if user is done with program
 			response2 = scan.nextLine();
 		}
 		scan.close();
